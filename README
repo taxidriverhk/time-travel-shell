@@ -1,0 +1,65 @@
+This is a skeleton for CS 111 Lab 1.
+
+Replace this README file with notes on your implementation.
+Mentions any special features or limitations.
+
+Partner 1:	Kwun Hei Leung
+UCLA ID:	504-125-471
+
+Partner 2:	Weike Bi
+UCLA ID:	504-213-199
+
+0. INTRODUCTION
+
+Files read-command.c, execute-command.c, main.c, command.h, command-internals.h were modified.
+All parts had been finished and passed all test cases with no errors.
+
+1. ALGORITHM / FEATURES:
+
+==========================Part A==========================
+
+The algorithm for making command stream is described below:
+
+First, get the file stream and read every single character.
+When a newline character is hit, then put the entire line into a buffer,
+then assuming the line contains non-simple command (e.g. AND_COMMAND, OR_COMMAND),
+command(s) would be created by calling an auxiliary function which recursively
+separates the command with the special tokens in the middle (i.e. && and ||) 
+using left-associativity, until the command contains no more && and ||. Of course,
+syntax error will be checked for during that process.
+
+After that, another function would be called to separate | or ; in the middle recursively,
+until the command is simple, then the auxiliary function at the top level would link all
+of the commands together, creating a command stream.
+
+For reading command, each command stream node has a member variable which keeps track of
+whether the command stream node has been read. Until all nodes are read, then there would 
+be a function that deallocates all dynamically-allocated memory used for the command stream, 
+and the strings, comamnds inside of the stream.
+
+==========================Part B==========================
+
+This part was pretty simple, for simple command, the program forks a new process and calls execvp()
+directly. And for compound commands such as OR, AND, PIPE and SUBSHELL, the program executes their subcommands
+recursively.
+
+==========================Part C==========================
+
+The hard part of this part is to determine file dependencies. The program does that by extracting
+the arguments and I/O redirections of each command, and then compare them to see if they have at least
+one identical item. If so, then one command depends on other one. There will also be an array determining
+whether a certain command can be executed now.
+
+Refer to page 5 of the following link for the algorithm in executing the commands in parallel.
+http://lasr.cs.ucla.edu/vahab/cs111/labs/lab1/lab1c-discussion-slides.pdf
+
+2. LIMITATION:
+
+Currently, the program does not have any limitations, and the program passed all test cases 
+provided by the skeleton, and the test cases made on our own which includes mix of 
+subshell commands and compound commands with I/O redirections. However, for time travel implementation, 
+since the program checks for arguments other than I/O redirections upon building the dependency graph,
+so if a command such as 'echo the command executed successfully' are being executed for few times,
+then they will not be executed in parallel because the program treats them being dependent to each other
+even if they are not. But for correctness of executing commands, checking for arguments should be kept
+since commands such as 'diff' and 'rm' that have no I/O redirections may have file dependencies.
