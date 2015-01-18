@@ -1,13 +1,13 @@
 # Time Travel Shell #
 
-0. INTRODUCTION
+## 0. INTRODUCTION ##
 
 Files read-command.c, execute-command.c, main.c, command.h, command-internals.h were modified.
 All parts had been finished and passed all test cases with no errors.
 
-1. ALGORITHM / FEATURES:
+## 1. ALGORITHM / FEATURES: ##
 
-==========================Part A==========================
+**==========================Part A==========================**
 
 The algorithm for making command stream is described below:
 
@@ -28,13 +28,13 @@ whether the command stream node has been read. Until all nodes are read, then th
 be a function that deallocates all dynamically-allocated memory used for the command stream, 
 and the strings, comamnds inside of the stream.
 
-==========================Part B==========================
+**==========================Part B==========================**
 
 This part was pretty simple, for simple command, the program forks a new process and calls execvp()
 directly. And for compound commands such as OR, AND, PIPE and SUBSHELL, the program executes their subcommands
 recursively.
 
-==========================Part C==========================
+**==========================Part C==========================**
 
 The hard part of this part is to determine file dependencies. The program does that by extracting
 the arguments and I/O redirections of each command, and then compare them to see if they have at least
@@ -44,7 +44,7 @@ whether a certain command can be executed now.
 Refer to page 5 of the following link for the algorithm in executing the commands in parallel.
 http://lasr.cs.ucla.edu/vahab/cs111/labs/lab1/lab1c-discussion-slides.pdf
 
-2. LIMITATION:
+## 2. LIMITATION: ##
 
 Currently, the program does not have any limitations, and the program passed all test cases 
 provided by the skeleton, and the test cases made on our own which includes mix of 
